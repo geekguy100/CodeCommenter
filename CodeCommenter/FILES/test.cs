@@ -1,2 +1,2 @@
-Kyle Grenier
-Kyle Grenier //Debug
+Kyle Grenier is so cool!
+Here is a thing: Debug.Log();

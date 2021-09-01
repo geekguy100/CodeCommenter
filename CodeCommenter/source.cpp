@@ -46,7 +46,7 @@ int main()
 int writeToFile(const string &filePath)
 {
 	fstream file;
-	file.open(filePath, ios::in | ios::out | ios::binary);
+	file.open(filePath, fstream::in | fstream::out);
 
 	if (file.is_open())
 	{
@@ -57,11 +57,9 @@ int writeToFile(const string &filePath)
 		{
 			// The line contains 'Debug', so let's search each word till we
 			// find the position of it.
-			// Also, make sure that it is not already commented by our program.
-			if (line.find("Debug") != string::npos && line.find("//Debug") == string::npos)
+			if (line.find("Debug") != string::npos)
 			{
 				istringstream ss(line);
-
 				string word;
 
 				while (ss >> word)
@@ -71,35 +69,21 @@ int writeToFile(const string &filePath)
 					if (word.find("Debug") != string::npos)
 					{
 						cout << "Found Debug at cursor pos: " << cursorPos << endl;
-
-						file.seekg(cursorPos);
-
-						// Get everything after the 'Debug' statement
-						// so we can make sure we append '//' and not overwrite any existing characters.
-						string restOfLine; 
-						getline(file, restOfLine);
-
-						file.seekg(cursorPos);
-
-						file << "//" + restOfLine;
-
 						foundDebug = true;
 					}
 
 					// We add 1 to account for the space after the word.
 					cursorPos += word.length() + 1;
-					file.seekg(cursorPos);
 				}
 
 				// We remove 1 because we reached the end of the line, and
 				// we don't want that to be treated as a space.
 				cursorPos -= 1;
-				file.seekg(cursorPos);
 			}
 			// If the line does not contain 'Debug', 
 			// add its length to the cursorPos.
-			
-			cursorPos += line.length() + 1;
+			else
+				cursorPos += line.length() /*+ 1*/;
 		}
 
 		if (!foundDebug)
